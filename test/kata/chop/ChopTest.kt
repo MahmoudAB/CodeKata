@@ -31,7 +31,29 @@ class ChopTest{
    
     }
 
-    private fun chop(value: Int, array_of_int: Array<Int>): Int {
+    private fun chop(target: Int, candidates: Array<Int>): Int {
+
+        if(candidates.size == 0) return -1
+        if(candidates[0] == target) return 0
+        if(candidates.size == 1) return -1
+
+        var firstHalf =candidates.sliceArray(0 until candidates.size / 2)
+        var secondHalf =candidates.sliceArray(candidates.size / 2 until candidates.size)
+
+        if (target >= secondHalf[0]){
+            return chop(target, secondHalf)
+
+        } else {
+            return chop(target,firstHalf)
+        }
+
+    }
+
+    private fun recursiveChop(){
+
+    }
+
+    private fun iterativeChop(value: Int, array_of_int: Array<Int>): Int {
 
         if(array_of_int.size == 0) return -1
 
@@ -61,6 +83,26 @@ class ChopTest{
 
 
 
+    }
+
+
+    private fun fib(n: Int) : Int {
+        if (n < 0) return -1
+        if (n < 2) return n
+        return fib(n-2) + fib(n-1)
+    }
+
+    private fun factorial(n: Int): Int{
+        return tailRecFac(n, 1)
+    }
+
+    private tailrec fun tailRecFac(n: Int, accumulator: Int): Int {
+        if(n == 0) return accumulator
+        return tailRecFac(n -1, n * accumulator)
+    }
+
+    private tailrec fun stupid() :Int {
+        return stupid()
     }
 
 
