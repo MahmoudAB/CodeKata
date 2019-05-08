@@ -1,17 +1,17 @@
-package kata.chop
+package binary.chop
 
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import kotlin.test.assertEquals
 
 
-class ChopTest{
+class ChopTest {
 
     @Test
     fun test_chop() {
         assertEquals(-1, chop(3, emptyArray()))
         assertEquals(-1, chop(3, arrayOf(1)))
         assertEquals(0, chop(1, arrayOf(1)))
-     
+
         assertEquals(0, chop(1, arrayOf(1, 3, 5)))
         assertEquals(1, chop(3, arrayOf(1, 3, 5)))
         assertEquals(2, chop(5, arrayOf(1, 3, 5)))
@@ -28,63 +28,62 @@ class ChopTest{
         assertEquals(-1, chop(4, arrayOf(1, 3, 5, 7)))
         assertEquals(-1, chop(6, arrayOf(1, 3, 5, 7)))
         assertEquals(-1, chop(8, arrayOf(1, 3, 5, 7)))
-   
+
+
+        assertEquals(5, chop(6, arrayOf(1, 2, 3, 4, 5, 6, 7, 8)))
+        assertEquals(2, chop(3, arrayOf(1, 2, 3, 4, 5, 6, 7, 8)))
+
     }
+
 
     private fun chop(target: Int, candidates: Array<Int>): Int {
+        return recursiveChop(target, candidates, 0)
 
-        if(candidates.size == 0) return -1
-        if(candidates[0] == target) return 0
-        if(candidates.size == 1) return -1
+    }
 
-        var firstHalf =candidates.sliceArray(0 until candidates.size / 2)
-        var secondHalf =candidates.sliceArray(candidates.size / 2 until candidates.size)
+    private fun recursiveChop(target: Int, candidates: Array<Int>, accumulator: Int): Int {
 
-        if (target >= secondHalf[0]){
-            return chop(target, secondHalf)
+        if (candidates.size == 0) return -1
+        if (candidates[0] == target) return accumulator
+        if (candidates.size == 1) return -1
 
-        } else {
-            return chop(target,firstHalf)
+        val firsthalf = candidates.sliceArray(0 until (candidates.size / 2))
+        val secondhalf = candidates.sliceArray((candidates.size / 2) until candidates.size)
+
+        if(target >= secondhalf[0]){
+            return recursiveChop(target, secondhalf, accumulator + (candidates.size / 2))
+        }else {
+            return recursiveChop(target, firsthalf, accumulator)
         }
 
-    }
-
-    private fun recursiveChop(){
 
     }
 
-    private fun iterativeChop(value: Int, array_of_int: Array<Int>): Int {
+    private fun iterativeChop(target: Int, candidates: Array<Int>): Int {
 
-        if(array_of_int.size == 0) return -1
+        var survivors = candidates.copyOf()
+        var firsthalf: Array<Int>
+        var secondhalf: Array<Int>
+        var targetIndex = 0
 
-        if (array_of_int[0] == value) return 0
+        while (true) {
+            if (survivors.size == 0) return -1
+            if (survivors[0] == target) return targetIndex
+            if (survivors.size == 1 || survivors[0] > target)  return -1
 
-        if(array_of_int.size == 1) return -1
+            firsthalf = survivors.sliceArray(0 until (survivors.size / 2))
+            secondhalf = survivors.sliceArray((survivors.size / 2) until survivors.size)
 
-        var firsthalf = array_of_int.sliceArray(IntRange(0, (array_of_int.size/2)-1))
-        var secondhalf = array_of_int.sliceArray(IntRange(array_of_int.size/2, array_of_int.size-1))
-        var position = array_of_int.size/2
-        val done = false
-        while(!done){
-            if(secondhalf[0] == value || firsthalf[0] == value) return position
-
-            if(value > secondhalf[0]){
-                position = position + secondhalf.size/2
-                secondhalf = secondhalf.sliceArray(IntRange(secondhalf.size/2, secondhalf.size-1))
-                if (secondhalf.size == 0 || secondhalf.size ==1 && value > secondhalf[0]) break
+            if (target >= secondhalf[0]) {
+                targetIndex += survivors.size / 2
+                survivors = secondhalf
             } else {
-                position = position + firsthalf.size / 2
-                firsthalf = firsthalf.sliceArray(IntRange(0, (firsthalf.size / 2) - 1))
-                if (firsthalf.size == 0 || firsthalf.size == 1 && value > firsthalf[0]) break
+                survivors = firsthalf
             }
 
         }
-        return -1
-
-
 
     }
-
 
     private fun fib(n: Int) : Int {
         if (n < 0) return -1
@@ -98,6 +97,7 @@ class ChopTest{
 
     private tailrec fun tailRecFac(n: Int, accumulator: Int): Int {
         if(n == 0) return accumulator
+        if (n % 2 == 0) return -1
         return tailRecFac(n -1, n * accumulator)
     }
 
@@ -105,6 +105,23 @@ class ChopTest{
         return stupid()
     }
 
+//    private fun myand(x : Boolean, y: Boolean): Boolean {
+//        if (x) {return y}
+//    }
+//
+//    private fun myor(x: Boolean, y: Boolean) {
+//        if (!x) {return y}
+//    }
+
+
+    @Test
+    fun bla() {
+        if(true || stupid() >1)
+            println("if")
+        else
+            println("else")
+
+    }
 
 
 }
