@@ -32,6 +32,7 @@ class ChopTest {
 
         assertEquals(5, chop(6, arrayOf(1, 2, 3, 4, 5, 6, 7, 8)))
         assertEquals(2, chop(3, arrayOf(1, 2, 3, 4, 5, 6, 7, 8)))
+        //assertEquals(50_432_987, chop(50_432_987, IntRange(0, 100_000_000).toList().toTypedArray()))
 
     }
 
@@ -41,20 +42,22 @@ class ChopTest {
 
     }
 
-    private fun recursiveChop(target: Int, candidates: Array<Int>, accumulator: Int): Int {
+    private tailrec fun recursiveChop(target: Int, candidates: Array<Int>, accumulator: Int): Int {
 
         if (candidates.size == 0) return -1
         if (candidates[0] == target) return accumulator
         if (candidates.size == 1) return -1
 
-        val firsthalf = candidates.sliceArray(0 until (candidates.size / 2))
-        val secondhalf = candidates.sliceArray((candidates.size / 2) until candidates.size)
+        val midPoint = candidates.size / 2
 
-        if(target >= secondhalf[0]){
-            return recursiveChop(target, secondhalf, accumulator + (candidates.size / 2))
-        }else {
-            return recursiveChop(target, firsthalf, accumulator)
-        }
+        val firsthalf = candidates.sliceArray(0 until midPoint)
+        val secondhalf = candidates.sliceArray(midPoint until candidates.size)
+
+        return if(target >= secondhalf[0])
+            recursiveChop(target, secondhalf, accumulator + midPoint)
+        else
+            recursiveChop(target, firsthalf, accumulator)
+
 
 
     }
